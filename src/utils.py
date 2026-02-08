@@ -1,8 +1,18 @@
 from statsmodels.tsa.stattools import adfuller
+import numpy as np
 
 def adf_test(series):
-    result = adfuller(series.dropna())
+    """
+    Perform Augmented Dickey-Fuller test.
+    """
+    series = series.dropna()
+
+    if len(series) < 20:
+        raise ValueError("Time series too short for ADF test.")
+
+    result = adfuller(series)
     return {
-        "adf_statistic": result[0],
-        "p_value": result[1]
+        "ADF Statistic": result[0],
+        "p-value": result[1],
+        "Is Stationary (5%)": result[1] < 0.05
     }
